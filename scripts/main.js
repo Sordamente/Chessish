@@ -12,7 +12,7 @@ let HELD;
 let FONT;
 
 function preload() {
-  FONT = loadFont('start.ttf');
+  //FONT = loadFont('start.ttf');
   const colors = ['black', 'white'];
   const pieces = 'bknpqr';
   for (let i = 0; i < 2; i++) {
@@ -26,7 +26,7 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(20);
-  textFont(FONT);
+  //textFont(FONT);
   noSmooth();
   noStroke();
   textAlign(LEFT, TOP);
