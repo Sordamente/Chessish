@@ -103,6 +103,7 @@ function createPieces() {
       spr.morale = Math.round(Math.random()) + 2;
       spr.trust = Math.round(Math.random()) + 2;
       spr.health = Math.round(Math.random()) + 2;
+      spr.lastFed = 0;
       spr.row = rows[j];
       spr.col = i;
       spr.addImage(ASSETS[(j < 2 ? 'black' : 'white') + spr.ident.type]);

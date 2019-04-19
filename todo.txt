@@ -1,0 +1,9 @@
+Things that need to be done by this Saturday:
+  Chess mechanics work perfectly
+  Alternative movement methods (?)
+  Basic Dialogue boxes
+  Basic Todo functionality
+  
+
+Things that need to be done by the end of the Hackathon:
+  Events

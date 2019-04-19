@@ -1,7 +1,8 @@
 let posCount = 0;
-let seenMoves = {};
-function checkIfSeen (value){
-  return seenMoves[value] === true;
+let seenStop = 0;
+
+function checkIfSeen (value, seen){
+  return seen[value] === true;
 }
 
 function minimaxRoot(depth, game, isMaximisingPlayer) {
@@ -12,7 +13,7 @@ function minimaxRoot(depth, game, isMaximisingPlayer) {
   for (var i = 0; i < moves.length; i++) {
     let tempMove = moves[i];
     game.move(tempMove);
-    let val = minimax(depth - 1, game, !isMaximisingPlayer, -10000, 10000);
+    let val = minimax(depth - 1, game, !isMaximisingPlayer, -10000, 10000, {});
     game.undo();
     if (val >= bestEval) {
       bestEval = val;
@@ -20,10 +21,11 @@ function minimaxRoot(depth, game, isMaximisingPlayer) {
     }
   }
   console.log(posCount)
+  console.log(seenStop)
   return bestMove;
 }
 
-function minimax(depth, game, isMaximisingPlayer, alpha, beta) {
+function minimax(depth, game, isMaximisingPlayer, alpha, beta, seen) {
   posCount++;
   if (depth === 0) {
     return -evaluateBoard(game);
@@ -35,12 +37,12 @@ function minimax(depth, game, isMaximisingPlayer, alpha, beta) {
     let bestEval = -9999;
     for (let i = 0; i < moves.length; i++) {
       game.move(moves[i]);
-      if (checkIfSeen(game.fen())) {
-
+      if (checkIfSeen(game.fen(), seen)) {
+        seenStop++;
         return bestEval;
       }
-      seenMoves[game.fen()] == true;
-      bestEval = Math.max(bestEval, minimax(depth - 1, game, !isMaximisingPlayer, alpha, beta));
+      seen[game.fen()] == true;
+      bestEval = Math.max(bestEval, minimax(depth - 1, game, !isMaximisingPlayer, alpha, beta, seen));
       game.undo();
       alpha = Math.max(alpha, bestEval);
       if (beta <= alpha) {
@@ -52,11 +54,12 @@ function minimax(depth, game, isMaximisingPlayer, alpha, beta) {
     let bestEval = 9999;
     for (let i = 0; i < moves.length; i++) {
       game.move(moves[i]);
-      if (checkIfSeen(game.fen())) {
+      if (checkIfSeen(game.fen(), seen)) {
+        seenStop++;
         return;
       }
-      seenMoves[game.fen()] == true;
-      bestEval = Math.min(bestEval, minimax(depth - 1, game, !isMaximisingPlayer, alpha, beta));
+      seen[game.fen()] == true;
+      bestEval = Math.min(bestEval, minimax(depth - 1, game, !isMaximisingPlayer, alpha, beta, seen));
       game.undo();
       beta = Math.min(beta, bestEval);
       if (beta <= alpha) {
