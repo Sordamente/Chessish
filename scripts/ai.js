@@ -1,6 +1,3 @@
-let posCount = 0;
-let seenStop = 0;
-
 function checkIfSeen (value, seen){
   return seen[value] === true;
 }
@@ -20,13 +17,10 @@ function minimaxRoot(depth, game, isMaximisingPlayer) {
       bestMove = tempMove;
     }
   }
-  console.log(posCount)
-  console.log(seenStop)
   return bestMove;
 }
 
 function minimax(depth, game, isMaximisingPlayer, alpha, beta, seen) {
-  posCount++;
   if (depth === 0) {
     return -evaluateBoard(game);
   }
@@ -38,7 +32,6 @@ function minimax(depth, game, isMaximisingPlayer, alpha, beta, seen) {
     for (let i = 0; i < moves.length; i++) {
       game.move(moves[i]);
       if (checkIfSeen(game.fen(), seen)) {
-        seenStop++;
         return bestEval;
       }
       seen[game.fen()] == true;
@@ -55,7 +48,6 @@ function minimax(depth, game, isMaximisingPlayer, alpha, beta, seen) {
     for (let i = 0; i < moves.length; i++) {
       game.move(moves[i]);
       if (checkIfSeen(game.fen(), seen)) {
-        seenStop++;
         return;
       }
       seen[game.fen()] == true;
@@ -70,27 +62,9 @@ function minimax(depth, game, isMaximisingPlayer, alpha, beta, seen) {
   }
 }
 
-function calcBestMove(game, isWhite, depth) {
-  /*const moves = game.moves({ verbose: true });
-  console.log(moves)
-
-  let bestMove = null;
-  let bestEval = -9999;
-  for (let i in moves) {
-    const tempMove = moves[i];
-    game.move(tempMove);
-    let boardValue = evaluateBoard(game);
-    boardValue = isWhite ? boardValue : -boardValue;
-    game.undo();
-    if (boardValue > bestEval) {
-      bestEval = boardValue;
-      bestMove = tempMove;
-    }
-  }
-  movePiece(bestMove.from, bestMove.to, isWhite, bestMove.flags == "k", bestMove.flags == "q", bestMove.flags == "p" || bestMove.flags == "pc");*/
-
+function calcBestMove(game, depth) {
   let bestMove = minimaxRoot(depth, game, true);
-  movePiece(bestMove.from, bestMove.to, isWhite, bestMove.flags == "k", bestMove.flags == "q", bestMove.flags == "p" || bestMove.flags == "pc");
+  movePiece(bestMove.from, bestMove.to, false, bestMove.flags == "k", bestMove.flags == "q", bestMove.flags == "p" || bestMove.flags == "pc");
 }
 
 function evaluateBoard(game) {

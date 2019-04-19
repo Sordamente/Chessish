@@ -5,7 +5,6 @@ let SELECTED = null;
 const PIECES = [];
 const ASSETS = {};
 let PTURN = true;
-const LAYERS = 2;
 let SUPP = 20;
 let ROUND = 0;
 let FEEDBTN;
@@ -64,8 +63,8 @@ function drawSupplies() {
   fill(100);
   rect(OUTGIN - 4 * SDIM - (SDIM / 6), OUTGIN, 4 * SDIM, SDIM * 8 + (SDIM / 4));
 
-  fill(255)
-  textSize(28)
+  fill(255);
+  textSize(28);
   text("Supplies: " + SUPP, OUTGIN - 4 * SDIM - (SDIM / 6) + 20, OUTGIN + 20)
 }
 
@@ -98,25 +97,6 @@ function drawStats() {
   }
 }
 
-function giveFood(piece) {
-  if (SUPP > 0 && piece.health < 4) {
-    SUPP--;
-    piece.lastFed = ROUND;
-    piece.health += Math.round(Math.random());
-  }
-}
-
-function getStat(num) {
-  const table = [
-    ['Miserable', '#ad3927'],
-    ['Poor', '#dd624f'],
-    ['OK', '#dbea3b'],
-    ['Good', '#5cea3c'],
-    ['Excellent', '#28a021']
-  ];
-  return table[num];
-}
-
 function mousePressed() {
   if (FEEDBTN.overlapPoint(camera.mouseX, camera.mouseY) && SELECTED != null) {
     giveFood(SELECTED);
@@ -140,41 +120,11 @@ function mousePressed() {
       SELECTED.position.y = Math.ceil((camera.mouseY - SDIM / 2) / SDIM) * SDIM;
       SELECTED.row = currYSquare;
       SELECTED.col = currXSquare;
-      calcBestMove(CHESS, false, LAYERS);
+      calcBestMove(CHESS, 3);
       checkLowStats();
       ROUND++;
       SUPP = Math.max(20 - ROUND, 5);
     }
     SELECTED = null;
-  }
-}
-
-function mouseOnBoard() {
-  return ((camera.mouseX > ORIGIN && camera.mouseX < SIDE) && (camera.mouseY > ORIGIN && camera.mouseY < SIDE));
-}
-
-function checkLowStats() {
-  for (let i in PIECES) {
-    if (ROUND - PIECES[i].lastFed > 2) {
-      PIECES[i].health = PIECES[i].health > 0 ? PIECES[i].health - Math.round(Math.random()) : 0;
-    }
-    if (ROUND > 4 && PIECES[i].ident.color == 'w' && PIECES[i].ident.type != 'k') {
-      let rolls = 0;
-      rolls += PIECES[i].morale + PIECES[i].trust + PIECES[i].health;
-      let num = Math.floor(Math.random() * 6);
-      if (rolls < 6 && num < 6 - rolls) {
-        CHESS.put({ type: PIECES[i].ident.type, color: 'b' }, convertMove(PIECES[i].row, PIECES[i].col));
-        const spr = createSprite(PIECES[i].col * SDIM, (7 - PIECES[i].row) * SDIM);
-        spr.ident = {type: PIECES[i].ident.type, color: 'b'};
-        spr.row = PIECES[i].row;
-        spr.col = PIECES[i].col;
-        spr.addImage(ASSETS['black' + spr.ident.type]);
-        spr.setCollider('rectangle', 0, 0, 20, 20);
-        spr.scale = SDIM / 20;
-        PIECES.push(spr);
-        PIECES[i].remove();
-        PIECES.splice(i, 1);
-      }
-    }
   }
 }

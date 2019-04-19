@@ -5,6 +5,55 @@ function convertMove(row, col) {
   return letters[col] + (row + 1);
 }
 
+function mouseOnBoard() {
+  return ((camera.mouseX > ORIGIN && camera.mouseX < SIDE) && (camera.mouseY > ORIGIN && camera.mouseY < SIDE));
+}
+
+function checkLowStats() {
+  for (let i in PIECES) {
+    if (ROUND - PIECES[i].lastFed > 2) {
+      PIECES[i].health = PIECES[i].health > 0 ? PIECES[i].health - Math.round(Math.random()) : 0;
+    }
+    if (ROUND > 4 && PIECES[i].ident.color == 'w' && PIECES[i].ident.type != 'k') {
+      let rolls = 0;
+      rolls += PIECES[i].morale + PIECES[i].trust + PIECES[i].health;
+      let num = Math.floor(Math.random() * 6);
+      if (rolls < 6 && num < 6 - rolls) {
+        CHESS.put({ type: PIECES[i].ident.type, color: 'b' }, convertMove(PIECES[i].row, PIECES[i].col));
+        const spr = createSprite(PIECES[i].col * SDIM, (7 - PIECES[i].row) * SDIM);
+        spr.ident = {type: PIECES[i].ident.type, color: 'b'};
+        spr.row = PIECES[i].row;
+        spr.col = PIECES[i].col;
+        spr.addImage(ASSETS['black' + spr.ident.type]);
+        spr.setCollider('rectangle', 0, 0, 20, 20);
+        spr.scale = SDIM / 20;
+        PIECES.push(spr);
+        PIECES[i].remove();
+        PIECES.splice(i, 1);
+      }
+    }
+  }
+}
+
+function giveFood(piece) {
+  if (SUPP > 0 && piece.health < 4) {
+    SUPP--;
+    piece.lastFed = ROUND;
+    piece.health += 1;
+  }
+}
+
+function getStat(num) {
+  const table = [
+    ['Miserable', '#ad3927'],
+    ['Poor', '#dd624f'],
+    ['OK', '#dbea3b'],
+    ['Good', '#5cea3c'],
+    ['Excellent', '#28a021']
+  ];
+  return table[num];
+}
+
 function movePossible(origin, prime, isPromote) {
   if (!isPromote) {
     if (CHESS.move({ from: origin, to: prime }) != null) {
@@ -34,7 +83,7 @@ function movePiece(origin, prime, isWhite, isKCastle, isQCastle, isPromote) {
       PIECES[toBeSpliced].remove();
       PIECES.splice(toBeSpliced, 1);
     }
-    
+
     if (isPromote) {
       for (let i in PIECES) {
         if (convertMove(PIECES[i].row, PIECES[i].col) == origin) {
