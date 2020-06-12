@@ -7,7 +7,7 @@ const ASSETS = {};
 let PTURN = true;
 let SUPP = 20;
 let ROUND = 0;
-let FEEDBTN;
+let FEEDBTN = null;
 
 function preload() {
   const colors = ['black', 'white'];
@@ -26,6 +26,7 @@ function setup() {
   noSmooth();
   noStroke();
   textAlign(LEFT, TOP);
+
   (height < width ? SDIM = height / 10 : SDIM = width / 10);
   camera.position.x = SDIM * 4 - SDIM / 2;
   camera.position.y = SDIM * 4 - SDIM / 2;
@@ -95,7 +96,7 @@ function drawStats() {
 }
 
 function mousePressed() {
-  if (FEEDBTN.overlapPoint(camera.mouseX, camera.mouseY) && SELECTED != null) {
+  if (FEEDBTN != null && FEEDBTN.overlapPoint(camera.mouseX, camera.mouseY) && SELECTED != null) {
     giveFood(SELECTED);
     return;
   }
