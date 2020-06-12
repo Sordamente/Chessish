@@ -17,7 +17,7 @@ function preload() {
       ASSETS[colors[i] + pieces[j]] = loadImage('assets/' + colors[i] + '_' + pieces[j] + '.png');
     }
   }
-  BACK = loadImage('/assets/board.png');
+  BACK = loadImage('assets/board.png');
 }
 
 function setup() {
