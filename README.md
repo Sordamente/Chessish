@@ -1,2 +1,3 @@
 # chessish
-A creative take on chess
+
+A fun little take on chess

@@ -8,10 +8,8 @@ let PTURN = true;
 let SUPP = 20;
 let ROUND = 0;
 let FEEDBTN;
-let FONT;
 
 function preload() {
-  //FONT = loadFont('start.ttf');
   const colors = ['black', 'white'];
   const pieces = 'bknpqr';
   for (let i = 0; i < 2; i++) {
@@ -25,7 +23,6 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(20);
-  //textFont(FONT);
   noSmooth();
   noStroke();
   textAlign(LEFT, TOP);
@@ -35,9 +32,9 @@ function setup() {
   ORIGIN = -SDIM / 2;
   SIDE = ORIGIN + SDIM * 8;
   OUTGIN = ORIGIN - SDIM / 8;
-  OUTSIDE = SIDE + SDIM / 8
-  createPieces();
+  OUTSIDE = SIDE + SDIM / 8;
   FEEDBTN = createSprite(OUTSIDE + 1.4 * SDIM, OUTGIN + SDIM * 3.8, 100, 40);
+  createPieces();
 }
 
 function draw() {
